@@ -1,13 +1,16 @@
 # The server (OAuth) side of bypy.py, the Baidu Personal Cloud Storage python client
 
 import os
+import sys
 import time
-import datetime
-import urllib
-import urllib2
+if sys.version_info[0] == 2:
+	import urllib as ulp
+	import urllib2 as ulr
+else:
+	import urllib.parse as ulp
+	import urllib.request as ulr
 import logging
 import traceback
-import json
 
 from bottle import route, request, response, default_app
 
@@ -102,8 +105,8 @@ def auth():
 				#'redirect_uri' : redirect_uri if redirect_uri else AuthUrl
 				'redirect_uri' : redirect_uri if redirect_uri else 'oob'
 			}
-			pars = urllib.urlencode(params)
-			resp = urllib2.urlopen(BaiduOAuthUrl, pars)
+			pars = ulp.urlencode(params)
+			resp = ulr.urlopen(BaiduOAuthUrl, pars)
 			status = resp.getcode()
 			resp_text = resp.read()
 			if status == 200:
@@ -147,8 +150,8 @@ def refresh():
 				'client_secret' : SecretKey
 				#'scope' : scope if scope else 'basic netdisk'
 			}
-			pars = urllib.urlencode(params)
-			resp = urllib2.urlopen(BaiduOAuthUrl, pars)
+			pars = ulp.urlencode(params)
+			resp = ulr.urlopen(BaiduOAuthUrl, pars)
 			status = resp.getcode()
 			resp_text = resp.read()
 			if status == 200:
