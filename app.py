@@ -12,7 +12,7 @@ else:
 import logging
 import traceback
 
-from bottle import route, request, response, default_app
+from bottle import route, request, response, run
 
 # constants
 ApiKey = os.environ['BAIDU_API_KEY']
@@ -57,7 +57,7 @@ def gen_retry_json(msg):
 	return  {'error_code': RetryErrorCode,
 		'error_msg': msg}
 
-#@route('/')
+@route('/')
 def index():
 	response.content_type = 'text/plain'
 	return AppID + "\nUpdated: {}\n".format(time.ctime(os.path.getmtime(__file__)))
@@ -76,7 +76,7 @@ def need_update_bypy():
 			err_json = err_json_const
 	return err_json
 
-#@route(AuthPath)
+@route(AuthPath)
 def auth():
 	update_json = need_update_bypy()
 	if update_json:
@@ -132,7 +132,7 @@ def auth():
 		logging.warning(err_text)
 		return gen_no_retry_json(err_text)
 
-#@route(RefreshPath)
+@route(RefreshPath)
 def refresh():
 	update_json = need_update_bypy()
 	if update_json:
@@ -177,20 +177,14 @@ def refresh():
 		response.status = 400
 		return gen_no_retry_json(err_rsp)
 
-#@route('/name/<name>')
-#def nameindex(name='Stranger'):
-#    return '<strong>Hello, %s!</strong>' % name
- 
-def create_server():
-	# This must be added in order to do correct path lookups for the views
-	#import os
-	from bottle import TEMPLATE_PATH
-	TEMPLATE_PATH.append(os.path.join(os.environ['OPENSHIFT_HOMEDIR'], 'runtime/repo/wsgi/views/')) 
+if __name__ == "__main__":
+	host = '0.0.0.0'
+	port = 8080
+	if 'PORT' in os.environ:
+		port = os.environ['PORT']
+	if 'IP' in os.environ:
+		host = os.environ['IP']
 
-	route('/')(index)
-	route(AuthPath)(auth)
-	route(RefreshPath)(refresh)
-	application=default_app()
-	return application
+	run(host=host, port=port)
 
 # vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 ff=unix
