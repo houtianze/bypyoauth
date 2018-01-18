@@ -106,7 +106,7 @@ def auth():
 				'redirect_uri' : redirect_uri if redirect_uri else 'oob'
 			}
 			pars = ulp.urlencode(params)
-			resp = ulr.urlopen(BaiduOAuthUrl, pars)
+			resp = ulr.urlopen(BaiduOAuthUrl + '?' + pars)
 			status = resp.getcode()
 			resp_text = resp.read()
 			if status == 200:
@@ -151,7 +151,7 @@ def refresh():
 				#'scope' : scope if scope else 'basic netdisk'
 			}
 			pars = ulp.urlencode(params)
-			resp = ulr.urlopen(BaiduOAuthUrl, pars)
+			resp = ulr.urlopen(BaiduOAuthUrl + '?' + pars)
 			status = resp.getcode()
 			resp_text = resp.read()
 			if status == 200:
