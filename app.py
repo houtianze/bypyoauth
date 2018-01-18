@@ -28,6 +28,10 @@ AppID = 'bypyoauth'
 AuthPath = '/auth'
 RefreshPath = '/refresh'
 
+# logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
 # utils
 def inc_list_size(li, size = 3, filler = 0):
 	i = len(li)
@@ -85,7 +89,7 @@ def auth():
 
 	if 'refresh_token' in request.query and 'code' not in request.query:
 		err_text = '/auth called for /refresh'
-		logging.warning(err_text)
+		logger.warning(err_text)
 		response.status = 400
 		return gen_no_retry_json(err_text)
 	error = request.query.error
@@ -107,7 +111,7 @@ def auth():
 			}
 			pars = ulp.urlencode(params)
 			requrl = BaiduOAuthUrl + '?' + pars
-			logging.debug("GET: " + requrl)
+			logger.debug("GET: " + requrl)
 			resp = ulr.urlopen(requrl)
 			status = resp.getcode()
 			resp_text = resp.read()
@@ -118,20 +122,20 @@ def auth():
 				err_text = "ERROR: Can't get access token, please retry.\n" + \
 					"HTTP status code: {}\n".format(status) + \
 					"Details: Baidu returned:\n{}".format(resp_text)
-				logging.warning(err_text)
+				logger.warning(err_text)
 				response.status = status
 				return gen_retry_json(err_text)
 		except:
 			err_rsp = "ERROR: Exception while getting access token, please retry.\n"
 			err_log = err_rsp + "Exception:\n{}".format(traceback.format_exc())
 			response.status = 500
-			logging.warning(err_log)
+			logger.warning(err_log)
 			return gen_retry_json(err_rsp)
 	else:
 		err_text = "ERROR: Invalid request: 'code' not inside the request, please retry.\n" + \
 			"Request:\n{}".format(request)
 		response.status = 400
-		logging.warning(err_text)
+		logger.warning(err_text)
 		return gen_no_retry_json(err_text)
 
 @route(RefreshPath)
@@ -154,7 +158,7 @@ def refresh():
 			}
 			pars = ulp.urlencode(params)
 			requrl = BaiduOAuthUrl + '?' + pars
-			logging.debug("GET:" + requrl)
+			logger.debug("GET:" + requrl)
 			resp = ulr.urlopen(requrl)
 			status = resp.getcode()
 			resp_text = resp.read()
@@ -165,19 +169,19 @@ def refresh():
 				err_text = "ERROR: Can't Refresh access token, please retry.\n" + \
 					"HTTP status code: {}\n".format(status) + \
 					"Details: Baidu returned:\n{}".format(resp_text)
-				logging.warning(err_text)
+				logger.warning(err_text)
 				response.status = status
 				return gen_retry_json(err_text)
 		except:
 			err_rsp = "ERROR: Exception while refresing token, please retry.\n"
 			err_log = err_rsp + "Exception:\n{}".format(traceback.format_exc())
-			logging.warning(err_log)
+			logger.warning(err_log)
 			response.status = 500
 			return gen_retry_json(err_rsp)
 	else:
 		err_rsp = "Error: param 'refresh_token' not found in your request.\n" + \
 			"Request:\n{}".format(request)
-		logging.warning(err_rsp)
+		logger.warning(err_rsp)
 		response.status = 400
 		return gen_no_retry_json(err_rsp)
 
