@@ -3,7 +3,8 @@
 import os
 import sys
 import time
-if sys.version_info[0] == 2:
+IsPy2 = sys.version_info[0] == 2
+if IsPy2:
 	import urllib as ulp
 	import urllib2 as ulr
 else:
@@ -112,12 +113,15 @@ def auth():
 				#'redirect_uri' : redirect_uri if redirect_uri else AuthUrl
 				'redirect_uri' : redirect_uri if redirect_uri else 'oob'
 			}
-			pars = ulp.urlencode(params)
+			if IsPy2:
+				pars = ulp.urlencode(params)
+			else:
+				pars = ulp.urlencode(params).encode('utf-8')
 			requrl = BaiduOAuthUrl + '?' + pars
-			req = ulr.Request(requrl, method='POST')
 			logger.debug("POST: " + requrl)
+			#req = ulr.Request(requrl, method='POST')
 			#resp = ulr.urlopen(req)
-			ulr.urlopen(BaiduOAuthUrl, pars)
+			resp = ulr.urlopen(BaiduOAuthUrl, pars)
 			status = resp.getcode()
 			resp_text = resp.read()
 			if status == 200:
@@ -161,12 +165,15 @@ def refresh():
 				'client_secret' : SecretKey
 				#'scope' : scope if scope else 'basic netdisk'
 			}
-			pars = ulp.urlencode(params)
+			if IsPy2:
+				pars = ulp.urlencode(params)
+			else:
+				pars = ulp.urlencode(params).encode('utf-8')
 			requrl = BaiduOAuthUrl + '?' + pars
-			req = ulr.Request(requrl, method='POST')
 			logger.debug("POST: " + requrl)
+			#req = ulr.Request(requrl, method='POST')
 			#resp = ulr.urlopen(req)
-			ulr.urlopen(BaiduOAuthUrl, pars)
+			resp = ulr.urlopen(BaiduOAuthUrl, pars)
 			status = resp.getcode()
 			resp_text = resp.read()
 			if status == 200:
