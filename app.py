@@ -31,6 +31,9 @@ RefreshPath = '/refresh'
 # logger
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
+logStreamHandler = logging.StreamHeander()
+logStreamHandler.setLevel(logging.DEBUG)
+logger.addHandler(logStreamHandler)
 
 # utils
 def inc_list_size(li, size = 3, filler = 0):
@@ -111,8 +114,9 @@ def auth():
 			}
 			pars = ulp.urlencode(params)
 			requrl = BaiduOAuthUrl + '?' + pars
-			logger.debug("GET: " + requrl)
-			resp = ulr.urlopen(requrl)
+			req = ulr.Request(requrl, method='POST')
+			logger.debug("POST: " + requrl)
+			resp = ulr.urlopen(req)
 			status = resp.getcode()
 			resp_text = resp.read()
 			if status == 200:
@@ -158,8 +162,9 @@ def refresh():
 			}
 			pars = ulp.urlencode(params)
 			requrl = BaiduOAuthUrl + '?' + pars
-			logger.debug("GET:" + requrl)
-			resp = ulr.urlopen(requrl)
+			req = ulr.Request(requrl, method='POST')
+			logger.debug("POST: " + requrl)
+			resp = ulr.urlopen(req)
 			status = resp.getcode()
 			resp_text = resp.read()
 			if status == 200:
