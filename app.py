@@ -31,7 +31,7 @@ RefreshPath = '/refresh'
 # logger
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-logStreamHandler = logging.StreamHeander()
+logStreamHandler = logging.StreamHandler()
 logStreamHandler.setLevel(logging.DEBUG)
 logger.addHandler(logStreamHandler)
 
