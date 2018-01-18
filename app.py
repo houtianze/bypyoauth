@@ -117,10 +117,6 @@ def auth():
 				pars = ulp.urlencode(params)
 			else:
 				pars = ulp.urlencode(params).encode('utf-8')
-			requrl = BaiduOAuthUrl + '?' + pars
-			logger.debug("POST: " + requrl)
-			#req = ulr.Request(requrl, method='POST')
-			#resp = ulr.urlopen(req)
 			resp = ulr.urlopen(BaiduOAuthUrl, pars)
 			status = resp.getcode()
 			resp_text = resp.read()
@@ -169,10 +165,6 @@ def refresh():
 				pars = ulp.urlencode(params)
 			else:
 				pars = ulp.urlencode(params).encode('utf-8')
-			requrl = BaiduOAuthUrl + '?' + pars
-			logger.debug("POST: " + requrl)
-			#req = ulr.Request(requrl, method='POST')
-			#resp = ulr.urlopen(req)
 			resp = ulr.urlopen(BaiduOAuthUrl, pars)
 			status = resp.getcode()
 			resp_text = resp.read()
