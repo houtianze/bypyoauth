@@ -106,7 +106,9 @@ def auth():
 				'redirect_uri' : redirect_uri if redirect_uri else 'oob'
 			}
 			pars = ulp.urlencode(params)
-			resp = ulr.urlopen(BaiduOAuthUrl + '?' + pars)
+			requrl = BaiduOAuthUrl + '?' + pars
+			logging.debug("GET: " + requrl)
+			resp = ulr.urlopen(requrl)
 			status = resp.getcode()
 			resp_text = resp.read()
 			if status == 200:
@@ -151,7 +153,9 @@ def refresh():
 				#'scope' : scope if scope else 'basic netdisk'
 			}
 			pars = ulp.urlencode(params)
-			resp = ulr.urlopen(BaiduOAuthUrl + '?' + pars)
+			requrl = BaiduOAuthUrl + '?' + pars
+			logging.debug("GET:" + requrl)
+			resp = ulr.urlopen(requrl)
 			status = resp.getcode()
 			resp_text = resp.read()
 			if status == 200:
@@ -188,3 +192,4 @@ if __name__ == "__main__":
 	run(host=host, port=port)
 
 # vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 ff=unix
+
