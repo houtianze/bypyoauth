@@ -116,7 +116,8 @@ def auth():
 			requrl = BaiduOAuthUrl + '?' + pars
 			req = ulr.Request(requrl, method='POST')
 			logger.debug("POST: " + requrl)
-			resp = ulr.urlopen(req)
+			#resp = ulr.urlopen(req)
+			ulr.urlopen(BaiduOAuthUrl, pars)
 			status = resp.getcode()
 			resp_text = resp.read()
 			if status == 200:
@@ -164,7 +165,8 @@ def refresh():
 			requrl = BaiduOAuthUrl + '?' + pars
 			req = ulr.Request(requrl, method='POST')
 			logger.debug("POST: " + requrl)
-			resp = ulr.urlopen(req)
+			#resp = ulr.urlopen(req)
+			ulr.urlopen(BaiduOAuthUrl, pars)
 			status = resp.getcode()
 			resp_text = resp.read()
 			if status == 200:
