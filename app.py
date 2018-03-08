@@ -120,7 +120,7 @@ def auth():
 			if IsPy2:
 				pars = ulp.urlencode(params)
 			else:
-				pars = ulp.urlencode(params).encode('utf-8')
+				pars = ulp.urlencode(params)
 			url = BaiduOAuthUrl + '?' + pars
 			logger.info("POST " + url)
 			req = ulr.Request(url = url, method = 'POST')
@@ -171,7 +171,7 @@ def refresh():
 			if IsPy2:
 				pars = ulp.urlencode(params)
 			else:
-				pars = ulp.urlencode(params).encode('utf-8')
+				pars = ulp.urlencode(params)
 			url = BaiduOAuthUrl + '?' + pars
 			logger.info("POST " + url)
 			req = ulr.Request(url = url, method = 'POST')
