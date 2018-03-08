@@ -7,9 +7,11 @@ IsPy2 = sys.version_info[0] == 2
 if IsPy2:
 	import urllib as ulp
 	import urllib2 as ulr
+	#import httplib as hc
 else:
 	import urllib.parse as ulp
 	import urllib.request as ulr
+	#import http.client as hc
 import logging
 import traceback
 
@@ -18,7 +20,9 @@ from bottle import route, request, response, run
 # constants
 ApiKey = os.environ['BAIDU_API_KEY']
 SecretKey = os.environ['BAIDU_API_SECRET']
-BaiduOAuthUrl = "https://openapi.baidu.com/oauth/2.0/token"
+BaiduOpenApiHost = "openapi.baidu.com"
+BaiduOAuthPath = "/oauth/2.0/token"
+BaiduOAuthUrl = "https://" + BaiduOpenApiHost + BaiduOAuthPath
 
 # error jsons
 NoRetryErrorCode = 31062
@@ -117,7 +121,10 @@ def auth():
 				pars = ulp.urlencode(params)
 			else:
 				pars = ulp.urlencode(params).encode('utf-8')
-			resp = ulr.urlopen(BaiduOAuthUrl, pars)
+			url = BaiduOAuthUrl + '?' + pars
+			logger.info("POST " + url)
+			req = ulr.Request(url = url, method = 'POST')
+			resp = ulr.urlopen(req)
 			status = resp.getcode()
 			resp_text = resp.read()
 			if status == 200:
@@ -165,7 +172,10 @@ def refresh():
 				pars = ulp.urlencode(params)
 			else:
 				pars = ulp.urlencode(params).encode('utf-8')
-			resp = ulr.urlopen(BaiduOAuthUrl, pars)
+			url = BaiduOAuthUrl + '?' + pars
+			logger.info("POST " + url)
+			req = ulr.Request(url = url, method = 'POST')
+			resp = ulr.urlopen(req)
 			status = resp.getcode()
 			resp_text = resp.read()
 			if status == 200:
