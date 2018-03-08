@@ -7,13 +7,13 @@ IsPy2 = sys.version_info[0] == 2
 if IsPy2:
 	import urllib as ulp
 	import urllib2 as ulr
-	#import httplib as hc
+	ule = ulr
 else:
 	import urllib.parse as ulp
 	import urllib.request as ulr
-	#import http.client as hc
+	import urllib.error as ule
 import logging
-import traceback
+#import traceback
 
 from bottle import route, request, response, run
 
@@ -127,24 +127,19 @@ def auth():
 			resp = ulr.urlopen(req)
 			status = resp.getcode()
 			resp_text = resp.read()
-			if status == 200:
-				response.content_type = 'application/json'
-				return resp_text
-			else:
-				err_text = "ERROR: Can't get access token, please retry.\n" + \
-					"HTTP status code: {}\n".format(status) + \
-					"Details: Baidu returned:\n{}".format(resp_text)
-				logger.warning(err_text)
-				response.status = status
-				return gen_retry_json(err_text)
-		except:
-			err_rsp = "ERROR: Exception while getting access token, please retry.\n"
-			err_log = err_rsp + "Exception:\n{}".format(traceback.format_exc())
-			response.status = 500
-			logger.warning(err_log)
-			return gen_retry_json(err_rsp)
+			response.content_type = 'application/json'
+			return resp_text
+		except ule.HTTPError as e:
+			status = e.code
+			resp_text = e.read()
+			err_text = "ERROR: Auth failed, please retry.\n" + \
+				"HTTP status code: {}\n".format(status) + \
+				"Details: Baidu returned:\n{}".format(resp_text)
+			logger.warning(err_text)
+			response.status = status
+			return gen_retry_json(err_text)
 	else:
-		err_text = "ERROR: Invalid request: 'code' not inside the request, please retry.\n" + \
+		err_text = "ERROR: Invalid request: 'code' not inside the request.\n" + \
 			"Request:\n{}".format(request)
 		response.status = 400
 		logger.warning(err_text)
@@ -178,22 +173,17 @@ def refresh():
 			resp = ulr.urlopen(req)
 			status = resp.getcode()
 			resp_text = resp.read()
-			if status == 200:
-				response.content_type = 'application/json'
-				return resp_text
-			else:
-				err_text = "ERROR: Can't Refresh access token, please retry.\n" + \
-					"HTTP status code: {}\n".format(status) + \
-					"Details: Baidu returned:\n{}".format(resp_text)
-				logger.warning(err_text)
-				response.status = status
-				return gen_retry_json(err_text)
-		except:
-			err_rsp = "ERROR: Exception while refresing token, please retry.\n"
-			err_log = err_rsp + "Exception:\n{}".format(traceback.format_exc())
-			logger.warning(err_log)
-			response.status = 500
-			return gen_retry_json(err_rsp)
+			response.content_type = 'application/json'
+			return resp_text
+		except ule.HTTPError as e:
+			status = e.code
+			resp_text = e.read()
+			err_text = "ERROR: Token refreshing failed, please retry.\n" + \
+				"HTTP status code: {}\n".format(status) + \
+				"Details: Baidu returned:\n{}".format(resp_text)
+			logger.warning(err_text)
+			response.status = status
+			return gen_retry_json(err_text)
 	else:
 		err_rsp = "Error: param 'refresh_token' not found in your request.\n" + \
 			"Request:\n{}".format(request)
