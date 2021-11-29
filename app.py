@@ -75,7 +75,7 @@ def index():
 	return AppID + "\nUpdated: {}\n".format(time.ctime(os.path.getmtime(__file__)))
 
 def need_update_bypy():
-	minver = '1.7.4'
+	minver = '1.7.6'
 	err_json_const = gen_no_retry_json(
 		"need to update bypy to at leaset v{} (pip install -U bypy)".format(minver))
 	err_json = {}
