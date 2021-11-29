@@ -21,3 +21,8 @@ export PORT=<the port to listen to>
 `python app.py`
 
 That's it.
+
+NOTE
+----
+
+`Profile`, `Procfile.windows`, `runtime.txt` are for Heroku deployment only, you can ignore them.

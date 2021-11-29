@@ -199,7 +199,7 @@ if __name__ == "__main__":
 	if 'IP' in os.environ:
 		host = os.environ['IP']
 
-	run(host=host, port=port)
+	run(server='gunicorn', host=host, port=port)
 
 # vim: tabstop=4 noexpandtab shiftwidth=4 softtabstop=4 ff=unix
 
