@@ -18,7 +18,7 @@ export PORT=<the port to listen to>
 ```
 
 - Run
-`python app.py`
+`gunicorn --bind localhost:8080 app:app`
 
 That's it.
 

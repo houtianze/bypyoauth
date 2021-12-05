@@ -1,1 +1,1 @@
-web: python app.py
+web: gunicorn -w $((2*$(nproc)+1)) --bind localhost:8080 app:app
